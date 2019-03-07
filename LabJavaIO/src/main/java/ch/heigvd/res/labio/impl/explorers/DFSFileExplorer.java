@@ -20,18 +20,23 @@ public class DFSFileExplorer implements IFileExplorer {
     //throw new UnsupportedOperationException("The student has not implemented this method yet.");
     //inspired by this website : https://stackoverflow.com/questions/2938942/file-explorer-java
 
-    if(rootDirectory.isDirectory()) {
-      File[] listsFilesDirectories = rootDirectory.listFiles();
+    //if(rootDirectory.isDirectory()) {
+      vistor.visit(rootDirectory); //visit the directory (even if it is a directory)
+      File[] listsFilesDirectories = rootDirectory.listFiles(); //list all files if directory
 
-      Arrays.sort(listsFilesDirectories);
+      //if the array is not null
+      if(listsFilesDirectories != null) {
+        Arrays.sort(listsFilesDirectories); //sort the files array
 
-      for (File file : listsFilesDirectories) {
-        if(file.isDirectory()) {
-          explore(file, vistor);
-        } else {
-          vistor.visit(file);
+        //for every file
+        for (File file : listsFilesDirectories) {
+          if (file.isDirectory()) { //if the file is a directory
+            explore(file, vistor); //recursion
+          } else { //else if it is a file
+            vistor.visit(file); //visit the file
+          }
         }
       }
-    }
+    //}
   }
 }
