@@ -19,6 +19,10 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
 
+  private static Integer lineNumber = new Integer(1);
+
+  private static boolean newLineNumberIsAdded = false;
+
   public FileNumberingFilterWriter(Writer out) {
     super(out);
   }
@@ -29,22 +33,39 @@ public class FileNumberingFilterWriter extends FilterWriter {
   public void write(String str, int off, int len) throws IOException {
     //throw new UnsupportedOperationException("The student has not implemented this method yet.");
 
-    Integer lineNumber = new Integer(1);
+    //Integer lineNumber = new Integer(1);
     /*StringBuilder sb = new StringBuilder();
 
     sb.append(lineNumber.toString() + "\t");
     sb.append(str);*/
     //String newString = lineNumber.toString() + "\t" + str;
+
     StringBuffer sb = new StringBuffer();
 
-    sb.append(lineNumber.toString());
-    sb.append("\t");
-    sb.append(str);
-    ++lineNumber;
-    sb.append(lineNumber.toString());
-    sb.append("\t");
-    len += 4;
+    if(lineNumber > 1) {
+      if(newLineNumberIsAdded) {
+        sb.append(str);
+        newLineNumberIsAdded = false;
+      } else {
+        sb.append(lineNumber.toString());
+        sb.append("\t");
+        len += 2;
+        sb.append(str);
+      }
+    } else {
+      sb.append(lineNumber.toString());
+      sb.append("\t");
+      len += 2;
+      sb.append(str);
+    }
 
+    if(str.contains("\n")) {
+      ++lineNumber;
+      sb.append(lineNumber.toString());
+      sb.append("\t");
+      len += 2;
+      newLineNumberIsAdded = true;
+    } else {
 
     String newString = sb.toString();
 
