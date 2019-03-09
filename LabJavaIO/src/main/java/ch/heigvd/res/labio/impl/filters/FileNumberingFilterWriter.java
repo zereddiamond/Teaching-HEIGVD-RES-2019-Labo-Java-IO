@@ -75,13 +75,34 @@ public class FileNumberingFilterWriter extends FilterWriter {
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
     //throw new UnsupportedOperationException("The student has not implemented this method yet.");
+
+
+
     super.write(cbuf, off, len);
   }
 
   @Override
   public void write(int c) throws IOException {
     //throw new UnsupportedOperationException("The student has not implemented this method yet.");
-    super.write(c);
-  }
 
+    if(newLineNumberIsAdded) {
+      if(c == '\n') {
+        super.write(c);
+        super.write(lineNumber + '0');
+        super.write('\t');
+
+        ++lineNumber;
+      } else {
+        super.write(c);
+      }
+    } else {
+      super.write(lineNumber + '0');
+      super.write('\t');
+      super.write(c);
+
+      ++lineNumber;
+
+      newLineNumberIsAdded = true;
+    }
+  }
 }
