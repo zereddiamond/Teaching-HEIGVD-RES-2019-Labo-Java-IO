@@ -43,9 +43,9 @@ public class FileNumberingFilterWriter extends FilterWriter {
     StringBuffer sb = new StringBuffer();
 
     //inspired by this : https://stackoverflow.com/questions/19223166/is-there-a-substringstart-length-function
-    /*if(off > 0) {
-      str = str.substring(off, Math.min((off + len), str.length()));
-    }*/
+    if(off > 0) {
+      str = str.substring(off);
+    }
 
     if(newLineNumberIsAdded) {
       sb.append(str);
