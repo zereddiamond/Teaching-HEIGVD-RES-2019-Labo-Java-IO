@@ -19,9 +19,9 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
 
-  private static Integer lineNumber = new Integer(1);
+  private int lineNumber = 1;
 
-  private static boolean newLineNumberIsAdded = false;
+  private boolean newLineNumberIsAdded = false;
 
   public FileNumberingFilterWriter(Writer out) {
     super(out);
@@ -42,30 +42,29 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
     StringBuffer sb = new StringBuffer();
 
-    if(lineNumber > 1) {
-      if(newLineNumberIsAdded) {
-        sb.append(str);
-        newLineNumberIsAdded = false;
-      } else {
-        sb.append(lineNumber.toString());
-        sb.append("\t");
-        len += 2;
-        sb.append(str);
-      }
+    //inspired by this : https://stackoverflow.com/questions/19223166/is-there-a-substringstart-length-function
+    /*if(off > 0) {
+      str = str.substring(off, Math.min((off + len), str.length()));
+    }*/
+
+    if(newLineNumberIsAdded) {
+      sb.append(str);
+      newLineNumberIsAdded = false;
     } else {
-      sb.append(lineNumber.toString());
+      sb.append(lineNumber);
       sb.append("\t");
       len += 2;
       sb.append(str);
+      newLineNumberIsAdded = true;
     }
 
     if(str.contains("\n")) {
       ++lineNumber;
-      sb.append(lineNumber.toString());
+      sb.append(lineNumber);
       sb.append("\t");
       len += 2;
       newLineNumberIsAdded = true;
-    } else {
+    }
 
     String newString = sb.toString();
 
