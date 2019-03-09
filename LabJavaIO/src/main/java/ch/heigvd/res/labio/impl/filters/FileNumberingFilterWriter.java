@@ -45,6 +45,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
     //inspired by this : https://stackoverflow.com/questions/19223166/is-there-a-substringstart-length-function
     if(off > 0) {
       str = str.substring(off);
+      off = 0;
     }
 
     if(newLineNumberIsAdded) {
