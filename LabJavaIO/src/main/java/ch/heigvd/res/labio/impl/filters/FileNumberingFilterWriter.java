@@ -44,11 +44,10 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
     //inspired by this : https://stackoverflow.com/questions/19223166/is-there-a-substringstart-length-function
     if(off > 0) {
-      str = str.substring(off);
-      off = 0;
+      str = str.substring(off, Math.min(str.length(), len + off));
     }
 
-    if(newLineNumberIsAdded) {
+    /*if(newLineNumberIsAdded) {
       sb.append(str);
       newLineNumberIsAdded = false;
     } else {
@@ -67,9 +66,15 @@ public class FileNumberingFilterWriter extends FilterWriter {
       newLineNumberIsAdded = true;
     }
 
-    String newString = sb.toString();
+    String newString = sb.toString();*/
 
-    super.write(newString, off, len);
+    for(int i = 0; i < str.length(); ++i) {
+      write(str.charAt(i));
+    }
+
+    //super.write(str, off , len);
+
+    //super.write(newString, off, len);
   }
 
   @Override
@@ -86,7 +91,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
     //throw new UnsupportedOperationException("The student has not implemented this method yet.");
 
     if(newLineNumberIsAdded) {
-      if(c == '\n') {
+      if(c == '\n' || c == '\r') {
         super.write(c);
         super.write(lineNumber + '0');
         super.write('\t');
