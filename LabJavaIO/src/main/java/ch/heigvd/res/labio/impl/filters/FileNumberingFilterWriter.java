@@ -122,9 +122,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
       endOfLine = true;
 
       return;
-    }
-
-    if(c == '\n' && !endOfLine) {
+    } else if(c == '\n' && !endOfLine) {
       super.write(c);
 
       if(lineNumber > 9) {
@@ -138,9 +136,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
       newLineNumberIsAdded = true;
       return;
-    }
-
-    if(!newLineNumberIsAdded) {
+    } else if(c != '\r' && c != '\n'){
       super.write(c);
     }
 
