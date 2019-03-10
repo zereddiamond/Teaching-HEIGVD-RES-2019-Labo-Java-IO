@@ -3,6 +3,7 @@ package ch.heigvd.res.labio.impl.filters;
 import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 /**
@@ -21,7 +22,9 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   private int lineNumber = 1;
 
-  private boolean newLineNumberIsAdded = false;
+  private boolean firstLineAdded = false;
+
+  private boolean endOfLine = false;
 
   public FileNumberingFilterWriter(Writer out) {
     super(out);
@@ -82,7 +85,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
     //throw new UnsupportedOperationException("The student has not implemented this method yet.");
     //super.write(cbuf, off, len);
     for(int i = 0; i < cbuf.length; ++i) {
-      write(cbuf[i]);
+      super.write(cbuf[i]);
     }
   }
 
@@ -90,8 +93,59 @@ public class FileNumberingFilterWriter extends FilterWriter {
   public void write(int c) throws IOException {
     //throw new UnsupportedOperationException("The student has not implemented this method yet.");
 
-    if(newLineNumberIsAdded) {
-      if(c == '\n' || c == '\r') {
+    boolean newLineNumberIsAdded = false;
+
+    if(!firstLineAdded) {
+      super.write(lineNumber + '0');
+      super.write('\t');
+      super.write(c);
+
+      ++lineNumber;
+
+      firstLineAdded = true;
+      return;
+    }
+
+    if(c == '\r') {
+      super.write(c);
+
+      if(lineNumber > 9) {
+        char[] lineNumberChars = String.valueOf(lineNumber).toCharArray();
+        write(lineNumberChars);
+      } else {
+        super.write(lineNumber + '0');
+      }
+      super.write('\t');
+      ++lineNumber;
+
+      newLineNumberIsAdded = true;
+      endOfLine = true;
+
+      return;
+    }
+
+    if(c == '\n' && !endOfLine) {
+      super.write(c);
+
+      if(lineNumber > 9) {
+        char[] lineNumberChars = String.valueOf(lineNumber).toCharArray();
+        write(lineNumberChars);
+      } else {
+        super.write(lineNumber + '0');
+      }
+      super.write('\t');
+      ++lineNumber;
+
+      newLineNumberIsAdded = true;
+      return;
+    }
+
+    if(!newLineNumberIsAdded) {
+      super.write(c);
+    }
+
+    /*if(newLineNumberIsAdded) {
+      if(c == '\n' && !endOfLine) {
         super.write(c);
         if(lineNumber > 9) {
           char[] lineNumberChars = String.valueOf(lineNumber).toCharArray();
@@ -101,6 +155,18 @@ public class FileNumberingFilterWriter extends FilterWriter {
         }
         super.write('\t');
         ++lineNumber;
+      } else if(c == '\r') {
+        super.write(c);
+        if(lineNumber > 9) {
+          char[] lineNumberChars = String.valueOf(lineNumber).toCharArray();
+          write(lineNumberChars);
+        } else {
+          super.write(lineNumber + '0');
+        }
+        super.write('\t');
+        ++lineNumber;
+
+        endOfLine = true;
       } else {
         super.write(c);
       }
@@ -112,6 +178,6 @@ public class FileNumberingFilterWriter extends FilterWriter {
       ++lineNumber;
 
       newLineNumberIsAdded = true;
-    }
+    }*/
   }
 }
