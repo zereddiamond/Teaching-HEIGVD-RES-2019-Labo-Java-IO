@@ -80,10 +80,10 @@ public class FileNumberingFilterWriter extends FilterWriter {
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
     //throw new UnsupportedOperationException("The student has not implemented this method yet.");
-
-
-
-    super.write(cbuf, off, len);
+    //super.write(cbuf, off, len);
+    for(int i = 0; i < cbuf.length; ++i) {
+      write(cbuf[i]);
+    }
   }
 
   @Override
@@ -93,9 +93,13 @@ public class FileNumberingFilterWriter extends FilterWriter {
     if(newLineNumberIsAdded) {
       if(c == '\n' || c == '\r') {
         super.write(c);
-        super.write(lineNumber + '0');
+        if(lineNumber > 9) {
+          char[] lineNumberChars = String.valueOf(lineNumber).toCharArray();
+          write(lineNumberChars);
+        } else {
+          super.write(lineNumber + '0');
+        }
         super.write('\t');
-
         ++lineNumber;
       } else {
         super.write(c);
