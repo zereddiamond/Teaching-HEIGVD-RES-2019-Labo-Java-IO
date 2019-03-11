@@ -93,87 +93,52 @@ public class FileNumberingFilterWriter extends FilterWriter {
   public void write(int c) throws IOException {
     //throw new UnsupportedOperationException("The student has not implemented this method yet.");
 
-    boolean newLineNumberIsAdded = false;
-
     if(!firstLineAdded) {
-      super.write(lineNumber + '0');
-      super.write('\t');
-      super.write(c);
+      lineNumber = writeLineNumbers(lineNumber);
 
-      ++lineNumber;
+      super.write(c);
 
       firstLineAdded = true;
       return;
     }
 
-    if(c == '\r') {
+    if(c == '\n') {
+      if(endOfLine) {
+        super.write('\r');
+      }
+
       super.write(c);
 
-      if(lineNumber > 9) {
-        char[] lineNumberChars = String.valueOf(lineNumber).toCharArray();
-        write(lineNumberChars);
-      } else {
-        super.write(lineNumber + '0');
-      }
-      super.write('\t');
-      ++lineNumber;
-
-      newLineNumberIsAdded = true;
-      endOfLine = true;
+      lineNumber = writeLineNumbers(lineNumber);
+      endOfLine = false;
 
       return;
-    } else if(c == '\n' && !endOfLine) {
-      super.write(c);
-
-      if(lineNumber > 9) {
-        char[] lineNumberChars = String.valueOf(lineNumber).toCharArray();
-        write(lineNumberChars);
-      } else {
-        super.write(lineNumber + '0');
-      }
-      super.write('\t');
-      ++lineNumber;
-
-      newLineNumberIsAdded = true;
-      return;
-    } else if(c != '\r' && c != '\n'){
-      super.write(c);
     }
 
-    /*if(newLineNumberIsAdded) {
-      if(c == '\n' && !endOfLine) {
-        super.write(c);
-        if(lineNumber > 9) {
-          char[] lineNumberChars = String.valueOf(lineNumber).toCharArray();
-          write(lineNumberChars);
-        } else {
-          super.write(lineNumber + '0');
-        }
-        super.write('\t');
-        ++lineNumber;
-      } else if(c == '\r') {
-        super.write(c);
-        if(lineNumber > 9) {
-          char[] lineNumberChars = String.valueOf(lineNumber).toCharArray();
-          write(lineNumberChars);
-        } else {
-          super.write(lineNumber + '0');
-        }
-        super.write('\t');
-        ++lineNumber;
+    if(c == '\r') {
+      endOfLine = true;
+    }
 
-        endOfLine = true;
-      } else {
-        super.write(c);
+    if(c != '\r' && c != '\n') {
+      if(endOfLine) {
+        super.write('\r');
+
+        lineNumber = writeLineNumbers(lineNumber);
+
+        endOfLine = false;
       }
-    } else {
-      super.write(lineNumber + '0');
-      super.write('\t');
       super.write(c);
-
-      ++lineNumber;
-
-      newLineNumberIsAdded = true;
-    }*/
+    }
   }
+
+  private int writeLineNumbers(int lineNumber) throws IOException {
+    write(String.valueOf(lineNumber).toCharArray());
+
+    super.write('\t');
+    ++lineNumber;
+
+    return lineNumber;
+  }
+
 }
+
