@@ -132,16 +132,16 @@ public class Application implements IApplication {
     File newDirectories = new File(path);
 
     //inspired by this : https://www.baeldung.com/java-write-to-file
-    if(newDirectories.mkdirs()) {
-      path += filename;
-      File newFile = new File(path);
+    newDirectories.mkdirs();
 
-      BufferedWriter writeFile = new BufferedWriter(new FileWriter(path));
+    path += "/" + filename;
+    File newFile = new File(path);
 
-      writeFile.write(quote.getQuote());
+    BufferedWriter writeFile = new BufferedWriter(new FileWriter(path));
 
-      writeFile.close();
-    }
+    writeFile.write(quote.getQuote());
+
+    writeFile.close();
   }
   
   /**
@@ -152,14 +152,22 @@ public class Application implements IApplication {
     IFileExplorer explorer = new DFSFileExplorer();
     explorer.explore(new File(WORKSPACE_DIRECTORY), new IFileVisitor() {
       @Override
-      public void visit(File file) throws IOException {
+      public void visit(File file) {
         /*
          * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
          * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
          * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
          */
 
-        writer.write(file.getCanonicalPath());
+        try {
+          writer.write(file.getPath() + '\n');
+
+          //writer.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+
+
       }
     });
   }
