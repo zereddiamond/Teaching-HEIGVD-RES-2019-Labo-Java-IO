@@ -1,5 +1,7 @@
 package ch.heigvd.res.labio.impl;
 
+import ch.heigvd.res.labio.impl.filters.FileNumberingFilterWriter;
+
 import java.util.logging.Logger;
 
 /**
@@ -21,6 +23,7 @@ public class Utils {
    */
   public static String[] getNextLine(String lines) {
     throw new UnsupportedOperationException("The student has not implemented this method yet.");
+
   }
 
 }

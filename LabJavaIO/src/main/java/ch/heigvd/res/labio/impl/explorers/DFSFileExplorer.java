@@ -3,6 +3,7 @@ package ch.heigvd.res.labio.impl.explorers;
 import ch.heigvd.res.labio.interfaces.IFileExplorer;
 import ch.heigvd.res.labio.interfaces.IFileVisitor;
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -21,7 +22,11 @@ public class DFSFileExplorer implements IFileExplorer {
     //inspired by this website : https://stackoverflow.com/questions/2938942/file-explorer-java
 
     //if(rootDirectory.isDirectory()) {
-      vistor.visit(rootDirectory); //visit the directory (even if it is a directory)
+      try {
+          vistor.visit(rootDirectory); //visit the directory (even if it is a directory)
+      } catch (IOException e) {
+          e.printStackTrace();
+      }
       File[] listsFilesDirectories = rootDirectory.listFiles(); //list all files if directory
 
       //if the array is not null
@@ -33,7 +38,11 @@ public class DFSFileExplorer implements IFileExplorer {
           if (file.isDirectory()) { //if the file is a directory
             explore(file, vistor); //recursion
           } else { //else if it is a file
-            vistor.visit(file); //visit the file
+              try {
+                  vistor.visit(file); //visit the file
+              } catch (IOException e) {
+                  e.printStackTrace();
+              }
           }
         }
       }
