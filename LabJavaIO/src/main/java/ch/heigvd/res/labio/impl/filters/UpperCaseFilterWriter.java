@@ -14,6 +14,8 @@ public class UpperCaseFilterWriter extends FilterWriter {
     super(wrappedWriter);
   }
 
+  //The goal of this class is to convert all characters or strings in uppercase.
+
   @Override
   public void write(String str, int off, int len) throws IOException {
     //throw new UnsupportedOperationException("The student has not implemented this method yet.");

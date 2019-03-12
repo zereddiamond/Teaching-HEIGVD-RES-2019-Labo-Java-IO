@@ -88,6 +88,9 @@ public class Application implements IApplication {
        * one method provided by this class, which is responsible for storing the content of the
        * quote in a text file (and for generating the directories based on the tags).
        */
+
+      //Missing piece here
+      //call this function with Quote object and filename
       storeQuote(quote, "quote-" + i + ".utf8");
 
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
@@ -124,24 +127,26 @@ public class Application implements IApplication {
    */
   void storeQuote(Quote quote, String filename) throws IOException {
     //throw new UnsupportedOperationException("The student has not implemented this method yet.");
-    String path = WORKSPACE_DIRECTORY;
+    String path = WORKSPACE_DIRECTORY; //initialize the path
 
-    for(String tag : quote.getTags()) {
+    for(String tag : quote.getTags()) { //for every tag add on path name
       path += "/" + tag;
     }
-    File newDirectories = new File(path);
+    File newDirectories = new File(path); //create new files
 
     //inspired by this : https://www.baeldung.com/java-write-to-file
-    newDirectories.mkdirs();
+    newDirectories.mkdirs(); //create as directories
 
+    //add filename in path
     path += "/" + filename;
-    File newFile = new File(path);
+    File newFile = new File(path); //create new file
 
+    //create a BufferedWriter with a FileWriter with a path
     BufferedWriter writeFile = new BufferedWriter(new FileWriter(path));
 
-    writeFile.write(quote.getQuote());
+    writeFile.write(quote.getQuote()); //write the quote
 
-    writeFile.close();
+    writeFile.close(); //close
   }
   
   /**
@@ -160,14 +165,12 @@ public class Application implements IApplication {
          */
 
         try {
-          writer.write(file.getPath() + '\n');
+          writer.write(file.getPath() + '\n'); //write the path including the filename and a LF character
 
           //writer.close();
         } catch (IOException e) {
           e.printStackTrace();
         }
-
-
       }
     });
   }
